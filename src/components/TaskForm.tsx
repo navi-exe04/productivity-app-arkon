@@ -1,3 +1,4 @@
+// Import modules
 import { useState, useRef } from 'react';
 import { useTaskContext } from '../contexts/TaskContext';
 import { 
@@ -9,12 +10,13 @@ import {
 } from '@mui/material';
 
 const TaskForm = () => {
+    // Configure state for the component
     const { dispatch } = useTaskContext();
     const [taskDescription, setTaskDescription] = useState<string>('');
     const [taskDuration, setTaskDuration] = useState<number>(0);
     const [taskTitle, setTaskTitle] = useState<string>("");
     const [showDurationInput, setShowDurationInput] = useState<boolean>(false);
-
+    
     const inputRef = useRef<HTMLInputElement>(null);
 
     const funAddTask = () => {
@@ -45,12 +47,16 @@ const TaskForm = () => {
 
     return (
         <Box>
-            <Paper elevation={4} sx={{ padding: '2rem', maxWidth: '350px', width: '100%', borderRadius: '10px' }}>
+            <Paper elevation={4} sx={{ 
+                padding: '2rem', maxWidth: '350px', 
+                width: '100%', borderRadius: '10px',
+                margin: '0 12px'
+            }}>
                 <Typography variant="h4" align="center" marginBottom="32px">
                     Crear una nueva tarea
                 </Typography>
-                <FormControl fullWidth>
-                    <Stack spacing={2}>
+                <Stack spacing={2}>
+                    <FormControl>
                         <TextField 
                             fullWidth 
                             label="Titulo de la tarea" 
@@ -59,6 +65,8 @@ const TaskForm = () => {
                             onChange={(e) => setTaskTitle(e.target.value)}
                             required 
                         />
+                    </FormControl>
+                    <FormControl>
                         <TextField 
                             fullWidth 
                             label="Descripción de la tarea" 
@@ -68,45 +76,45 @@ const TaskForm = () => {
                             value={taskDescription}
                             onChange={(e) => setTaskDescription(e.target.value)}
                         />
-                        <div>
-                            {
-                                !showDurationInput ? (
-                                    <>
-                                        <InputLabel id="select-duration-label">
-                                            Duración (min)
-                                        </InputLabel>
-                                        <Select
-                                            fullWidth
-                                            labelId='select-duration-label'
-                                            id='select-duration'
-                                            label="Duración (min)"
-                                            value={taskDuration}
-                                            onChange={(e) => funSetTaskDuration(Number(e.target.value))}
-                                            required
-                                        >
-                                            <MenuItem value={30}>Corta (30 minutos)</MenuItem>
-                                            <MenuItem value={45}>Media (45 minutos)</MenuItem>
-                                            <MenuItem value={60}>Larga (1 hora)</MenuItem>
-                                            <MenuItem value={1}>Personalizada</MenuItem>
-                                        </Select>
-                                    </>
-                                )
-                                : (
-                                    <TextField 
+                    </FormControl>
+                    <FormControl>
+                        {
+                            !showDurationInput ? (
+                                <>
+                                    <InputLabel id="select-duration-label">
+                                        Duración (min)
+                                    </InputLabel>
+                                    <Select
                                         fullWidth
-                                        type='number'
-                                        label="Duración personalizada en min." 
-                                        variant="outlined"
-                                        onChange={(e) => setTaskDuration(parseInt(e.target.value))}
-                                    />
-                                )
-                            }
-                        </div>
-                        <Button onClick={funAddTask} variant="contained" color="primary" fullWidth>
-                            Add Task
-                        </Button>
-                    </Stack>
-                </FormControl>
+                                        labelId='select-duration-label'
+                                        id='select-duration'
+                                        label="Duración (min)"
+                                        value={taskDuration}
+                                        onChange={(e) => funSetTaskDuration(Number(e.target.value))}
+                                        required
+                                    >
+                                        <MenuItem value={30}>Corta (30 minutos)</MenuItem>
+                                        <MenuItem value={45}>Media (45 minutos)</MenuItem>
+                                        <MenuItem value={60}>Larga (1 hora)</MenuItem>
+                                        <MenuItem value={1}>Personalizada</MenuItem>
+                                    </Select>
+                                </>
+                            )
+                            : (
+                                <TextField 
+                                    fullWidth
+                                    type='number'
+                                    label="Duración personalizada en min." 
+                                    variant="outlined"
+                                    onChange={(e) => setTaskDuration(parseInt(e.target.value))}
+                                />
+                            )
+                        }
+                    </FormControl>
+                    <Button onClick={funAddTask} variant="contained" color="primary" fullWidth>
+                        Agregar tarea
+                    </Button>
+                </Stack>
             </Paper>
         </Box>
     );

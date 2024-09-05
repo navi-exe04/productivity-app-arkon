@@ -10,7 +10,7 @@ function App() {
       <TaskProvider>
         <div id="productivity-app">
           <header className="app-header">
-            <Typography variant='h1' textAlign="center" marginBottom="32px">
+            <Typography variant='h2' textAlign="center" marginBottom="32px">
                 Arkon Productivity App
             </Typography>
           </header>
