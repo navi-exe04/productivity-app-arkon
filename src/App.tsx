@@ -8,9 +8,9 @@ function App() {
   return (
     <>
       <TaskProvider>
-        <div id="productivity-app">
+        <div id="productivity-app" className="bg-blue">
           <header className="app-header">
-            <Typography variant='h2' textAlign="center" marginBottom="32px">
+            <Typography variant='h2' className="title">
                 Arkon Productivity App
             </Typography>
           </header>

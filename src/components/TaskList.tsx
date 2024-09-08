@@ -1,42 +1,101 @@
 // Import modules
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTaskContext } from '../contexts/TaskContext';
-import { Box, Button, Typography, Paper, Stack } from '@mui/material';
+import { Box, Button, Typography, Paper, Stack, Item } from '@mui/material';
+import { Task } from '../models/interfaces';
 
 const TaskList = () => {
     // Config state for tasks
     const { state, dispatch } = useTaskContext();
+    const [selectedTab, setSelectedTab] = useState('pending');
 
     // Obtain the pending tasks
-    const pendingTasks = useMemo(
-        () => state.filter(task => !task.isCompleted),
+    const pendingTasks = useMemo(() => 
+        state.tasks.filter(task => !task.isCompleted),
         [state]
     );
 
+    // Obtain the completed tasks
+    const completedTasks = useMemo(() => 
+        state.tasks.filter(task => task.isCompleted),
+        [state]
+    );
+
+
+
+    // 
+    const funEditTask = (taskId : string) => {
+        const taskInfo = state.tasks.find(task => task.taskId === taskId);
+        dispatch({
+            type: 'SET_TASK_INFO',
+            payload: taskInfo as Task
+        });
+        dispatch({
+            type: 'SET_EDITING_TASK',
+            payload: true
+        });
+    }
+
     // List of pending tasks
     return (
-        <Box sx={{minWidth: "400px"}}>
-            <Typography variant="h4" textAlign="center" marginBottom="32px">
-                Lista de tareas
-            </Typography>
+        <Box sx={{minWidth: "400px", maxWidth: "500px"}}>
+            <div id='tasks-list'>
+                <Typography variant="h4" className='title'>
+                    Lista de tareas
+                </Typography>
+                {/* Task lists tabs */}
+                <Stack direction="row" spacing={2}>
+                    <Button onClick={() => setSelectedTab('pending')}>
+                        Tareas pendientes
+                    </Button>
+                    <Button onClick={() => setSelectedTab('completed')}>
+                        Tareas terminadas
+                    </Button>
+                </Stack>
+            </div>
+
+            {/* List of tasks */}
             <Stack spacing={2}>
                 {
-                    pendingTasks.map(task => (
-                        <Paper elevation={3} key={task.taskId} sx={{border: "2px solid black", borderRadius: "8px", padding: "6px 12px"}}>
-                            <Typography variant='h6' textAlign="center" marginBottom="16px">
-                                {task.taskTitle} - {task.taskDuration} minutos
-                            </Typography>
-                            <Typography variant='body1' textAlign="center">
-                                {task.taskDescription}
-                            </Typography>
-                            <Button sx={{background:"#2a9d8f", marginRight: "12px"}} onClick={() => dispatch({ type: 'COMPLETE_TASK', payload: task.taskId })} >
-                                <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 14L8.23309 16.4248C8.66178 16.7463 9.26772 16.6728 9.60705 16.2581L18 6" stroke="#ffffff" stroke-width="2" stroke-linecap="round"></path> </g></svg>
-                            </Button>
-                            <Button sx={{background:"#c1121f"}} onClick={() => dispatch({ type: 'DELETE_TASK', payload: task.taskId })}>
-                                <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 7H20" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M6 7V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V7" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                            </Button>
-                        </Paper>
-                    ))
+                    selectedTab == 'pending' ? (
+                        pendingTasks.map(task => (
+                            <Paper elevation={3} key={task.taskId} sx={{border: "2px solid orange", borderRadius: "8px", padding: "6px 12px"}}>
+                                {/* Task info */}
+                                <Typography variant='h5' textAlign="center" marginBottom="16px">
+                                    {task.taskTitle}
+                                </Typography>
+                                <Typography variant='body1' textAlign="center" marginBottom="16px">
+                                    {task.taskDescription}
+                                </Typography>
+                                <Typography variant='h6' textAlign="center" marginBottom="16px">
+                                    Tiempo estimado: {task.taskDuration} minutos
+                                </Typography>
+                                
+                                {/* Task options */}
+                                <Box>
+                                    <Button 
+                                        sx={{background:"#2a9d8f", marginRight: "12px"}} 
+                                        onClick={() => dispatch({ type: 'COMPLETE_TASK', payload: task.taskId })} 
+                                    >
+                                        <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M5 14L8.23309 16.4248C8.66178 16.7463 9.26772 16.6728 9.60705 16.2581L18 6" stroke="#ffffff" strokeWidth="2" strokeLinecap="round"></path> </g></svg>
+                                    </Button>
+                                    <Button 
+                                        sx={{background:"#3a86ff", marginRight: "12px"}} 
+                                        onClick={() => funEditTask(task.taskId)}
+                                    >
+                                        <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Edit / Edit_Pencil_01"> <path id="Vector" d="M12 8.00012L4 16.0001V20.0001L8 20.0001L16 12.0001M12 8.00012L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L16 12.0001M12 8.00012L16 12.0001" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
+                                    </Button>
+                                    <Button 
+                                        sx={{background:"#c1121f"}} 
+                                        onClick={() => dispatch({ type: 'DELETE_TASK', payload: task.taskId })}
+                                    >
+                                        <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 7H20" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M6 7V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V7" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
+                                    </Button>
+                                </Box>
+                            </Paper>
+                        ))
+                    ) 
+                    : (null)
                 }
             </Stack>
         </Box>

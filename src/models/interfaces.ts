@@ -4,4 +4,5 @@ export interface Task {
     taskDescription: string;
     taskDuration: number;
     isCompleted: boolean;
+    isCustomDuration: boolean;
 }
