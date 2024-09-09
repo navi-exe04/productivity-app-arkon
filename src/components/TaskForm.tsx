@@ -139,6 +139,12 @@ const TaskForm = () => {
                 isCustomDuration: showCustomizedDurationInput,
             },
         });
+        if (state.selectedTask?.taskId === state.taskInfo.taskId) {
+            dispatch({
+                type: 'SET_SELECTED_TASK',
+                payload: state.taskInfo.taskId,
+            })
+        }
     }
 
     //-----------------------------------------------------------------------------------------------------------------
@@ -184,7 +190,7 @@ const TaskForm = () => {
     //======================================================// Component template
     return (
         <Box id='task-form'>
-            <Paper elevation={4} className='form-container'>
+            <Paper elevation={4} className='form-container container'>
                 <form onSubmit={funSaveTaskInformation}>
                     {
                         // Form text title

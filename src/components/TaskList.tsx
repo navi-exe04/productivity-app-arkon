@@ -54,6 +54,18 @@ const TaskList = () => {
         })
     }
 
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Delete a task in state
+    const funDeleteTask = (taskId : string) => {
+        dispatch({ type: 'DELETE_TASK', payload: taskId });
+        if (state.selectedTask?.taskId === taskId) {
+            dispatch({
+                type: 'SET_SELECTED_TASK',
+                payload: null,
+            })
+        }
+    }
+
     //=================================================================================================================
     //======================================================// Component template
     return (
@@ -87,7 +99,11 @@ const TaskList = () => {
                             <Paper 
                                 elevation={3} 
                                 key={task.taskId} 
-                                className={'list-items__item' + ` ${selectedTab}`}
+                                className={
+                                    'list-items__item' 
+                                    + ` ${selectedTab}` 
+                                    + `${state.selectedTask?.taskId === task.taskId ? ' selected' : ''}`
+                                }
                             >
                                 {/* Task title */}
                                 <div className='item-top'>
@@ -108,14 +124,14 @@ const TaskList = () => {
                                 <div className="item-options">
                                     <Button
                                         title='Comenzar tarea'
-                                        sx={{background:"#2a9d8f"}} 
-                                        onClick={() => dispatch({ type: 'COMPLETE_TASK', payload: task.taskId })} 
+                                        sx={{background:"#3a86ff"}} 
+                                        onClick={() => dispatch({ type: 'SET_SELECTED_TASK', payload: task.taskId })} 
                                     >
-                                        <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16.6582 9.28638C18.098 10.1862 18.8178 10.6361 19.0647 11.2122C19.2803 11.7152 19.2803 12.2847 19.0647 12.7878C18.8178 13.3638 18.098 13.8137 16.6582 14.7136L9.896 18.94C8.29805 19.9387 7.49907 20.4381 6.83973 20.385C6.26501 20.3388 5.73818 20.0469 5.3944 19.584C5 19.053 5 18.1108 5 16.2264V7.77357C5 5.88919 5 4.94701 5.3944 4.41598C5.73818 3.9531 6.26501 3.66111 6.83973 3.6149C7.49907 3.5619 8.29805 4.06126 9.896 5.05998L16.6582 9.28638Z" stroke="#ffffff" strokeWidth="2" strokeLinejoin="round"></path> </g></svg>
+                                        <svg width="25px" height="25px" viewBox="0 -4 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>view_simple [#815]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-260.000000, -4563.000000)" fill="#ffffff"> <g id="icons" transform="translate(56.000000, 160.000000)"> <path d="M216,4409.00052 C216,4410.14768 215.105,4411.07682 214,4411.07682 C212.895,4411.07682 212,4410.14768 212,4409.00052 C212,4407.85336 212.895,4406.92421 214,4406.92421 C215.105,4406.92421 216,4407.85336 216,4409.00052 M214,4412.9237 C211.011,4412.9237 208.195,4411.44744 206.399,4409.00052 C208.195,4406.55359 211.011,4405.0763 214,4405.0763 C216.989,4405.0763 219.805,4406.55359 221.601,4409.00052 C219.805,4411.44744 216.989,4412.9237 214,4412.9237 M214,4403 C209.724,4403 205.999,4405.41682 204,4409.00052 C205.999,4412.58422 209.724,4415 214,4415 C218.276,4415 222.001,4412.58422 224,4409.00052 C222.001,4405.41682 218.276,4403 214,4403" id="view_simple-[#815]"> </path> </g> </g> </g> </g></svg>
                                     </Button>
                                     <Button 
                                         title='Editar tarea'
-                                        sx={{background:"#3a86ff"}} 
+                                        sx={{background:"#ffbc42"}} 
                                         onClick={() => funEditTask(task.taskId)}
                                     >
                                         <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Edit / Edit_Pencil_01"> <path id="Vector" d="M12 8.00012L4 16.0001V20.0001L8 20.0001L16 12.0001M12 8.00012L14.8686 5.13146L14.8704 5.12976C15.2652 4.73488 15.463 4.53709 15.691 4.46301C15.8919 4.39775 16.1082 4.39775 16.3091 4.46301C16.5369 4.53704 16.7345 4.7346 17.1288 5.12892L18.8686 6.86872C19.2646 7.26474 19.4627 7.46284 19.5369 7.69117C19.6022 7.89201 19.6021 8.10835 19.5369 8.3092C19.4628 8.53736 19.265 8.73516 18.8695 9.13061L18.8686 9.13146L16 12.0001M12 8.00012L16 12.0001" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g> </g></svg>
@@ -123,7 +139,7 @@ const TaskList = () => {
                                     <Button 
                                         title='Eliminar tarea'
                                         sx={{background:"#c1121f"}} 
-                                        onClick={() => dispatch({ type: 'DELETE_TASK', payload: task.taskId })}
+                                        onClick={() => funDeleteTask(task.taskId)}
                                     >
                                         <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 7H20" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M6 7V18C6 19.6569 7.34315 21 9 21H15C16.6569 21 18 19.6569 18 18V7" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5V7H9V5Z" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
                                     </Button>

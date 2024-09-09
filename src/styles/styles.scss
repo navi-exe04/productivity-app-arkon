@@ -6,7 +6,7 @@ body {
 }
 
 // Backgrounds
-.bg-blue {
+.bg-blue1 {
     background: $blue-1;
 }
 
@@ -14,6 +14,13 @@ body {
     background: $white;
 }
 
+.bg-green {
+    background: $green !important;
+}
+
+.bg-orange {
+    background: $orange !important;
+}
 
 // Titles and fonts
 .title {
@@ -29,6 +36,18 @@ body {
     color: $white;
 }
 
+.fc-blue {
+    color: $blue;
+}
+
+.fc-yellow {
+    color: $yellow;
+}
+
+.fw-bolder {
+    font-weight: bolder !important;
+}
+
 
 // App styles
 #productivity-app {
@@ -38,109 +57,159 @@ body {
     }
 
     .productivity-app__content {
-
-        #task-form {
-            .form-container {
+        .content-section {
+            display: flex;
+            justify-content: space-evenly;
+            
+            .container {
                 width: 100%;
                 max-width: 350px;
                 padding: 24px;
                 border-radius: 10px;
                 margin: 0 12px;
                 background: $white;
+            }
     
-                button {
-                    background: $gray-1;
+            #tasks-timer {
+                .timer-container {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    height: 150px;
+                    margin-bottom: 12px;
+
+                    &:has(.timer-container__context) {
+                        background: $white !important;
+                        justify-content: center;
+                    }
+                    
+                    .timer-container__context {
+                        text-align: center;
+                        font-weight: bolder;
+                        font-size: 24px;
+                    }
+                }
+            }
+    
+            #task-form {
+                .form-container {
+                    button {
+                        background: $gray-1;
+                    }
+                }
+            }
+        
+            #tasks-list {
+                width: 100%;
+                max-width: 500px;
+        
+                .tasks-list__top {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-around;
+                    margin-bottom: 12px;
+    
+                    button.top-tabs__btn {
+                        color: $gray-2;
+                        font-weight: bolder;
+                        background: none;
+                        border-bottom: 3px solid transparent;
+                        border-radius: 0;
+                        box-shadow: none;
+                        
+                        &:hover, &.active {
+                            color: $white;
+                            border-bottom: 3px solid $white;
+                        }
+                    }
+                }
+    
+                .tasks-list__items {
+                    .list-items__item {
+                        transition: all ease-in-out 0.3s;
+                        background: $white;
+                        border-radius: 10px;
+                        border: 3px solid $blue-1;
+
+                        &.selected, &:hover {
+                            border-color: $orange;
+                        }
+    
+                        .item-top {
+                            display: flex;
+                            justify-content: space-between;
+                            border-top-left-radius: 10px;
+                            border-top-right-radius: 10px;
+                            padding: 8px 12px;
+                            margin-bottom: 16px;
+                            
+                            p {
+                                font-weight: bolder !important;
+                                color: $blue-1;
+                                
+                                &.item-top__title {
+                                    text-transform: uppercase;
+                                }
+    
+                                &.item-top__duration {
+                                    font-style: italic;
+                                }
+                            }
+                        }
+    
+                        .item-info {
+                            padding: 0 12px;
+                            margin-bottom: 16px;
+                            text-align: center;
+                        }
+    
+                        .item-options {
+                            display: flex;
+                            justify-content: end;
+    
+                            button {
+                                border-radius: 0;
+                                
+                                &:first-child {
+                                    border-top-left-radius: 10px;
+                                }
+        
+                                &:last-child {
+                                    border-bottom-right-radius: 10px;
+                                }
+                            }
+    
+                        }
+    
+                        &.pending {
+                            .item-top {
+                                background: $orange;
+                            }
+                        }
+    
+                        &.completed {
+                            .item-top {
+                                background: $green;
+                            }
+                        }
+                    }
                 }
             }
         }
-    
-        #tasks-list {
-            width: 500px;
-    
-            .tasks-list__top {
-                width: 100%;
-                display: flex;
-                justify-content: space-around;
-                margin-bottom: 12px;
+    }
+}
 
-                button.top-tabs__btn {
-                    color: $gray-2;
-                    font-weight: bolder;
-                    background: none;
-                    border-bottom: 3px solid transparent;
-                    border-radius: 0;
-                    box-shadow: none;
-                    
-                    &:hover, &.active {
-                        color: $white;
-                        border-bottom: 3px solid $white;
-                    }
-                }
+@media (width <= 953px) {
+    #productivity-app {
+    
+        .productivity-app__content {
+            .content-section {
+                flex-direction: column;
+                align-items: center;
             }
 
-            .tasks-list__items {
-                .list-items__item {
-                    background: $white;
-                    border-radius: 10px;
-
-                    .item-top {
-                        display: flex;
-                        justify-content: space-between;
-                        border-top-left-radius: 10px;
-                        border-top-right-radius: 10px;
-                        padding: 8px 12px;
-                        margin-bottom: 16px;
-                        
-                        p {
-                            font-weight: bolder !important;
-                            color: $blue-1;
-                            
-                            &.item-top__title {
-                                text-transform: uppercase;
-                            }
-
-                            &.item-top__duration {
-                                font-style: italic;
-                            }
-                        }
-                    }
-
-                    .item-info {
-                        padding: 0 12px;
-                        margin-bottom: 16px;
-                        text-align: center;
-                    }
-
-                    .item-options {
-                        display: flex;
-                        justify-content: end;
-
-                        button {
-                            border-radius: 0;
-                            
-                            &:first-child {
-                                border-top-left-radius: 10px;
-                            }
-    
-                            &:last-child {
-                                border-bottom-right-radius: 10px;
-                            }
-                        }
-
-                    }
-
-                    &.pending {
-                        .item-top {
-                            background: $orange;
-                        }
-                    }
-
-                    &.completed {
-                        .item-top {
-                            background: $green;
-                        }
-                    }
-                }
+            #tasks-list {
+                margin-top: 24px;
             }
         }
     }

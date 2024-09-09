@@ -4,10 +4,11 @@
 
 //=====================================================================================================================
 //==========================================================// Import modules
-import { TaskProvider } from "./contexts/TaskContext"
-import { Grid2, Typography, Box } from "@mui/material"
-import TaskForm from "./components/TaskForm"
-import TaskList from "./components/TaskList"
+import { TaskProvider } from "./contexts/TaskContext";
+import { Grid2, Typography, Box } from "@mui/material";
+import TaskForm from "./components/TaskForm";
+import TaskList from "./components/TaskList";
+import Timer from "./components/Timer";
 
 //=====================================================================================================================
 //==========================================================// App
@@ -18,21 +19,22 @@ function App() {
   return (
     <>
       <TaskProvider>
-        <div id="productivity-app" className="bg-blue">
+        <div id="productivity-app" className="bg-blue1">
           <header className="productivity-app__header">
             <Typography variant='h2' className="title fc-white">
               Arkon Productivity App
             </Typography>
           </header>
           <Box className="productivity-app__content">
-            <Grid2 container spacing={2} sx={{display: "flex", justifyContent: "space-around"}}>
-              <Grid2 xs={12}>
+            <div className="content-section">
+              <div className="content-section__column">
+                <Timer></Timer>
                 <TaskForm></TaskForm>
-              </Grid2>
-              <Grid2 xs={12}>
+              </div>
+              <div className="content-section__column">
                 <TaskList></TaskList>
-              </Grid2>
-            </Grid2>
+              </div>
+            </div>
           </Box>
         </div>
       </TaskProvider>

@@ -26,7 +26,7 @@ type Action =
     | { type: 'COMPLETE_TASK'; payload: string }
     | { type: 'UNCOMPLETE_TASK'; payload: string }
     | { type: 'SET_TASK_INFO'; payload: Task }
-    | { type: 'SET_SELECTED_TASK'; payload: string }
+    | { type: 'SET_SELECTED_TASK'; payload: string | null}
     | { type: 'SET_EDITING_TASK'; payload: boolean }
     | { type: 'SET_RESET_FORM'; payload: boolean };
 
@@ -92,9 +92,10 @@ const taskReducer = (state: TaskState, action: Action): TaskState => {
         case 'SET_SELECTED_TASK':
             return {
                 ...state,
-                selectedTask: state.tasks.find(task =>
-                    task.taskId === action.payload
-                ),
+                selectedTask: 
+                    action.payload == null 
+                        ? undefined 
+                        : state.tasks.find(task => task.taskId === action.payload),
             };
         //-------------------------------------------------------------------------------------------------------------
         //                                                  // Set a editing task status
@@ -127,7 +128,7 @@ const TaskContext = createContext<{
         tasks: [], 
         isEditing: false, 
         taskInfo:{} as Task,
-        selectedTask: {} as Task,
+        selectedTask: undefined,
         resetForm: false,
     }, 
     dispatch: () => null 
@@ -140,7 +141,7 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
         tasks: [], 
         isEditing: false, 
         taskInfo:{} as Task,
-        selectedTask: {} as Task,
+        selectedTask: undefined,
         resetForm: false,
     });
 
