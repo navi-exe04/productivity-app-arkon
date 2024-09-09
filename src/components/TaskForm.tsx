@@ -1,5 +1,5 @@
 // Import modules
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useTaskContext } from '../contexts/TaskContext';
 import { 
     FormControl, Button, 
@@ -13,9 +13,9 @@ const TaskForm = () => {
     // Configure state for the component
     const { state, dispatch } = useTaskContext();
     
-    const [taskTitle, setTaskTitle] = useState<string>(state.taskInfo ? state.taskInfo.taskTitle : "");
-    const [taskDescription, setTaskDescription] = useState<string>(state.taskInfo ? state.taskInfo.taskDescription : "");
-    const [taskDuration, setTaskDuration] = useState<number>(state.taskInfo ? state.taskInfo.taskDuration : 0);
+    const [taskTitle, setTaskTitle] = useState<string>((state.isEditing) ? state.taskInfo.taskTitle : "");
+    const [taskDescription, setTaskDescription] = useState<string>((state.isEditing) ? state.taskInfo.taskDescription : "");
+    const [taskDuration, setTaskDuration] = useState<number>((state.isEditing) ? state.taskInfo.taskDuration : 0);
     
     const [showCustomizedDurationInput, setShowCustomizedDurationInput] = useState<boolean>(false);
     const [customHours, setCustomHours] = useState<number>(0);
@@ -24,6 +24,18 @@ const TaskForm = () => {
     const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
     
     const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (state.resetForm) {
+            setTaskTitle(state.taskInfo.taskTitle);
+            setTaskDescription(state.taskInfo.taskDescription);
+            setTaskDuration(state.taskInfo.taskDuration);
+            dispatch({
+                type: 'SET_RESET_FORM',
+                payload: false
+            });
+        }
+    }, [state.resetForm]);
 
     // Reset the component state
     const funResetState = () => {
@@ -34,28 +46,65 @@ const TaskForm = () => {
         setCustomHours(0);
         setCustomMinutes(0);
         setCustomDuration(0);
+        dispatch({
+            type: 'SET_TASK_INFO',
+            payload: {
+                taskId: "",
+                taskTitle: "",
+                taskDescription: "",
+                taskDuration: 0,
+                taskFinalDuration: 0,
+                isCompleted: false,
+                isCustomDuration: false,
+            }
+        });
+        dispatch({
+            type: 'SET_EDITING_TASK',
+            payload: false
+        });
+    }
 
+    const funSaveTaskInformation = (e : React.ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        if (taskDescription.trim() && taskDuration > 0) {
+            if (!state.isEditing) funAddTask()
+            else funEditTask()
+        }
+        funResetState();
+        inputRef.current?.focus();
     }
 
     // Add a new task in state
-    const funAddTask = (e : React.ChangeEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if (taskDescription.trim() && taskDuration > 0) {
-            dispatch({
-                type: 'ADD_TASK',
-                payload: {
-                    taskId: Date.now().toString(),
-                    taskTitle,
-                    taskDescription,
-                    taskDuration: showCustomizedDurationInput ? customDuration : taskDuration,
-                    isCompleted: false,
-                    isCustomDuration: showCustomizedDurationInput,
-                },
-            });
-            funResetState();
-            inputRef.current?.focus();
-        }
+    const funAddTask = () => {
+        dispatch({
+            type: 'ADD_TASK',
+            payload: {
+                taskId: Date.now().toString(),
+                taskTitle,
+                taskDescription,
+                taskDuration: showCustomizedDurationInput ? customDuration : taskDuration,
+                taskFinalDuration: 0,
+                isCompleted: false,
+                isCustomDuration: showCustomizedDurationInput,
+            },
+        });
     };
+
+    // Edit a task in state
+    const funEditTask = () => {
+        dispatch({
+            type: 'EDIT_TASK',
+            payload: {
+                taskId: state.taskInfo.taskId,
+                taskTitle,
+                taskDescription,
+                taskDuration: showCustomizedDurationInput ? customDuration : taskDuration,
+                taskFinalDuration: 0,
+                isCompleted: false,
+                isCustomDuration: showCustomizedDurationInput,
+            },
+        });
+    }
 
     // Set the duration in state or defines a customized duration
     const funSetTaskDuration = (duration : number) => {
@@ -98,16 +147,21 @@ const TaskForm = () => {
     }
 
     return (
-        <Box>
-            <Paper elevation={4} className='form-container' sx={{ 
-                padding: '2rem', maxWidth: '350px', 
-                width: '100%', borderRadius: '10px',
-                margin: '0 12px'
-            }}>
-                <form onSubmit={funAddTask}>
-                    <Typography variant="h4" className='title'>
-                        Crear una nueva tarea
-                    </Typography>
+        <Box id='task-form'>
+            <Paper elevation={4} className='form-container'>
+                <form onSubmit={funSaveTaskInformation}>
+                    {
+                        !state.isEditing ? (
+                            <Typography variant="h4" className='title fc-blue-1'>
+                                Crear una nueva tarea
+                            </Typography>
+                        ) 
+                        : (
+                            <Typography variant="h4" className='title fc-blue-1'>
+                                Editar tarea
+                            </Typography>
+                        )
+                    }
                     <Stack spacing={2}>
                         <FormControl>
                             <TextField 
@@ -186,15 +240,28 @@ const TaskForm = () => {
                                 )
                             }
                         </FormControl>
-                        <Button 
-                            fullWidth
-                            type='submit' 
-                            variant="contained" 
-                            color="primary" 
-                            disabled={showErrorMessage}
-                        >
-                            Agregar tarea
-                        </Button>
+                        {
+                            !state.isEditing ? (
+                                <Button 
+                                    fullWidth
+                                    type='submit' 
+                                    variant="contained"
+                                    disabled={showErrorMessage}
+                                >
+                                    Agregar tarea
+                                </Button>
+                            ) 
+                            : (
+                                <Button 
+                                    fullWidth
+                                    type='submit' 
+                                    variant="contained"
+                                    disabled={showErrorMessage}
+                                >
+                                    Editar tarea
+                                </Button>
+                            )
+                        }
                     </Stack>
                 </form>
             </Paper>

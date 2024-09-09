@@ -9,12 +9,12 @@ function App() {
     <>
       <TaskProvider>
         <div id="productivity-app" className="bg-blue">
-          <header className="app-header">
-            <Typography variant='h2' className="title">
+          <header className="productivity-app__header">
+            <Typography variant='h2' className="title fc-white">
                 Arkon Productivity App
             </Typography>
           </header>
-          <Box>
+          <Box className="productivity-app__content">
             <Grid2 container spacing={2} sx={{display: "flex", justifyContent: "space-around"}}>
               <Grid2 xs={12}>
                 <TaskForm></TaskForm>

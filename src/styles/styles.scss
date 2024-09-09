@@ -14,35 +14,134 @@ body {
     background: $white;
 }
 
-// Titles
+
+// Titles and fonts
 .title {
     margin-bottom: 16px !important;
     text-align: center;
 }
 
-h2.title {
-    color: $white;
-}
-
-h4.title {
+.fc-blue-1 {
     color: $blue-1;
 }
 
+.fc-white {
+    color: $white;
+}
+
+
+// App styles
 #productivity-app {
-    .app-header {
-        margin: 24px;
+
+    .productivity-app__header {
+        margin: 32px 0px;
     }
 
-    .form-container {
-        width: 100%;
-        max-width: 350px;
-        padding: 24px;
-        border-radius: 10px;
-        margin: 0 12px;
-        background: $white;
-    }
+    .productivity-app__content {
 
-    #task-list {
-        
+        #task-form {
+            .form-container {
+                width: 100%;
+                max-width: 350px;
+                padding: 24px;
+                border-radius: 10px;
+                margin: 0 12px;
+                background: $white;
+    
+                button {
+                    background: $gray-1;
+                }
+            }
+        }
+    
+        #tasks-list {
+            width: 500px;
+    
+            .tasks-list__top {
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+                margin-bottom: 12px;
+
+                button.top-tabs__btn {
+                    color: $gray-2;
+                    font-weight: bolder;
+                    background: none;
+                    border-bottom: 3px solid transparent;
+                    border-radius: 0;
+                    box-shadow: none;
+                    
+                    &:hover, &.active {
+                        color: $white;
+                        border-bottom: 3px solid $white;
+                    }
+                }
+            }
+
+            .tasks-list__items {
+                .list-items__item {
+                    background: $white;
+                    border-radius: 10px;
+
+                    .item-top {
+                        display: flex;
+                        justify-content: space-between;
+                        border-top-left-radius: 10px;
+                        border-top-right-radius: 10px;
+                        padding: 8px 12px;
+                        margin-bottom: 16px;
+                        
+                        p {
+                            font-weight: bolder !important;
+                            color: $blue-1;
+                            
+                            &.item-top__title {
+                                text-transform: uppercase;
+                            }
+
+                            &.item-top__duration {
+                                font-style: italic;
+                            }
+                        }
+                    }
+
+                    .item-info {
+                        padding: 0 12px;
+                        margin-bottom: 16px;
+                        text-align: center;
+                    }
+
+                    .item-options {
+                        display: flex;
+                        justify-content: end;
+
+                        button {
+                            border-radius: 0;
+                            
+                            &:first-child {
+                                border-top-left-radius: 10px;
+                            }
+    
+                            &:last-child {
+                                border-bottom-right-radius: 10px;
+                            }
+                        }
+
+                    }
+
+                    &.pending {
+                        .item-top {
+                            background: $orange;
+                        }
+                    }
+
+                    &.completed {
+                        .item-top {
+                            background: $green;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
