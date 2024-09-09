@@ -1,4 +1,9 @@
-// Import modules
+//=====================================================================================================================
+//==========================================================// Task form component
+//==========================================================// Code by: Raúl Langle
+
+//=====================================================================================================================
+//==========================================================// Import modules
 import { useState, useRef, useEffect } from 'react';
 import { useTaskContext } from '../contexts/TaskContext';
 import { 
@@ -9,27 +14,44 @@ import {
     InputLabel
 } from '@mui/material';
 
+
+//=====================================================================================================================
+//==========================================================// Component
 const TaskForm = () => {
-    // Configure state for the component
-    const { state, dispatch } = useTaskContext();
     
+    //=================================================================================================================
+    //======================================================// Component state
+    const { state, dispatch } = useTaskContext();
     const [taskTitle, setTaskTitle] = useState<string>((state.isEditing) ? state.taskInfo.taskTitle : "");
     const [taskDescription, setTaskDescription] = useState<string>((state.isEditing) ? state.taskInfo.taskDescription : "");
     const [taskDuration, setTaskDuration] = useState<number>((state.isEditing) ? state.taskInfo.taskDuration : 0);
-    
     const [showCustomizedDurationInput, setShowCustomizedDurationInput] = useState<boolean>(false);
     const [customHours, setCustomHours] = useState<number>(0);
     const [customMinutes, setCustomMinutes] = useState<number>(0);
     const [customDuration, setCustomDuration] = useState<number>(0);
     const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
-    
     const inputRef = useRef<HTMLInputElement>(null);
 
+
+    //=================================================================================================================
+    //======================================================// Effects and functions
+
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Reset the form to show the task 
+    //                                                      // information if is editing a task
     useEffect(() => {
         if (state.resetForm) {
+            //                                              // Define the task information in form
             setTaskTitle(state.taskInfo.taskTitle);
             setTaskDescription(state.taskInfo.taskDescription);
             setTaskDuration(state.taskInfo.taskDuration);
+            setShowCustomizedDurationInput(state.taskInfo.isCustomDuration);
+            //                                              // The task has custom duration
+            if (state.taskInfo.isCustomDuration) {
+                setCustomHours(state.taskInfo.taskHours);
+                setCustomMinutes(state.taskInfo.taskMinutes);
+            }
+            //                                              // Reset the form
             dispatch({
                 type: 'SET_RESET_FORM',
                 payload: false
@@ -37,7 +59,8 @@ const TaskForm = () => {
         }
     }, [state.resetForm]);
 
-    // Reset the component state
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Reset the component state
     const funResetState = () => {
         setTaskTitle('');
         setTaskDescription('');
@@ -53,6 +76,8 @@ const TaskForm = () => {
                 taskTitle: "",
                 taskDescription: "",
                 taskDuration: 0,
+                taskMinutes: 0,
+                taskHours: 0,
                 taskFinalDuration: 0,
                 isCompleted: false,
                 isCustomDuration: false,
@@ -64,17 +89,22 @@ const TaskForm = () => {
         });
     }
 
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Save the task information in state
     const funSaveTaskInformation = (e : React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (taskDescription.trim() && taskDuration > 0) {
-            if (!state.isEditing) funAddTask()
-            else funEditTask()
+            if (!state.isEditing) 
+                funAddTask()
+            else 
+                funEditTask()
         }
         funResetState();
         inputRef.current?.focus();
     }
 
-    // Add a new task in state
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Create a new task in state
     const funAddTask = () => {
         dispatch({
             type: 'ADD_TASK',
@@ -82,15 +112,18 @@ const TaskForm = () => {
                 taskId: Date.now().toString(),
                 taskTitle,
                 taskDescription,
-                taskDuration: showCustomizedDurationInput ? customDuration : taskDuration,
-                taskFinalDuration: 0,
+                taskDuration,
+                taskHours: showCustomizedDurationInput ? customHours : 0,
+                taskMinutes: showCustomizedDurationInput ? customMinutes : 0,
+                taskFinalDuration: showCustomizedDurationInput ? customDuration : taskDuration,
                 isCompleted: false,
                 isCustomDuration: showCustomizedDurationInput,
             },
         });
     };
 
-    // Edit a task in state
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Edit a task in state
     const funEditTask = () => {
         dispatch({
             type: 'EDIT_TASK',
@@ -98,15 +131,18 @@ const TaskForm = () => {
                 taskId: state.taskInfo.taskId,
                 taskTitle,
                 taskDescription,
-                taskDuration: showCustomizedDurationInput ? customDuration : taskDuration,
-                taskFinalDuration: 0,
+                taskDuration,
+                taskHours: showCustomizedDurationInput ? customHours : 0,
+                taskMinutes: showCustomizedDurationInput ? customMinutes : 0,
+                taskFinalDuration: showCustomizedDurationInput ? customDuration : taskDuration,
                 isCompleted: false,
                 isCustomDuration: showCustomizedDurationInput,
             },
         });
     }
 
-    // Set the duration in state or defines a customized duration
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Define the duration type in state
     const funSetTaskDuration = (duration : number) => {
         setTaskDuration(duration);
         
@@ -116,16 +152,16 @@ const TaskForm = () => {
         return setShowCustomizedDurationInput(false);
     }
 
-    // Set the customized duration in state
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Set a custom duration in state
     const funSetCustomizedDurantion = (e : React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
-        // Obtain the values of inputs and define temp variables
+        //                                                  // Obtain the values of inputs and define temp variables
         const {id, value} = e.target;
         const duration = parseInt(value);
         let newCustomHours = customHours;
         let newCustomMinutes = customMinutes;
-        
-        // Check the custom hours or minutes
+        //                                                  // Set the custom hours or minutes
         if (id === 'hours') {
             setCustomHours(duration);
             newCustomHours = duration;
@@ -134,23 +170,24 @@ const TaskForm = () => {
             setCustomMinutes(duration);
             newCustomMinutes = duration;
         }
-
-        // Save the custom duration in state
+        //                                                  // Save the total duration in minutes in state
         const totalDuration = (newCustomHours*60) + newCustomMinutes;
         setCustomDuration(totalDuration);
-        
-        // Verify if the duration is correct
+        //                                                  // Verify if the duration is correct
         if (totalDuration > 120)
             return setShowErrorMessage(true);
         else
             return setShowErrorMessage(false);
     }
 
+    //=================================================================================================================
+    //======================================================// Component template
     return (
         <Box id='task-form'>
             <Paper elevation={4} className='form-container'>
                 <form onSubmit={funSaveTaskInformation}>
                     {
+                        // Form text title
                         !state.isEditing ? (
                             <Typography variant="h4" className='title fc-blue-1'>
                                 Crear una nueva tarea
@@ -162,6 +199,7 @@ const TaskForm = () => {
                             </Typography>
                         )
                     }
+                    {/* Form inputs */}
                     <Stack spacing={2}>
                         <FormControl>
                             <TextField 
@@ -241,6 +279,7 @@ const TaskForm = () => {
                             }
                         </FormControl>
                         {
+                            // Form submit button
                             !state.isEditing ? (
                                 <Button 
                                     fullWidth

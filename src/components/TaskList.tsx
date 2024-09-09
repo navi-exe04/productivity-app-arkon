@@ -1,28 +1,43 @@
-// Import modules
+//=====================================================================================================================
+//==========================================================// Task list component
+//==========================================================// Code by: Raúl Langle
+
+//=====================================================================================================================
+//==========================================================// Import modules
 import { useMemo, useState } from 'react';
 import { useTaskContext } from '../contexts/TaskContext';
 import { Box, Button, Typography, Paper, Stack } from '@mui/material';
 import { Task } from '../models/interfaces';
 
+
+//=====================================================================================================================
+//==========================================================// Component
 const TaskList = () => {
-    // Config state for tasks
+    //=================================================================================================================
+    //======================================================// Component state
     const { state, dispatch } = useTaskContext();
     const [selectedTab, setSelectedTab] = useState('pending');
 
-    // Obtain the pending tasks
+    //=================================================================================================================
+    //======================================================// Effects and functions
+
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Obtain the pending tasks
     const pendingTasks = useMemo(() => 
         state.tasks.filter(task => !task.isCompleted),
         [state]
     );
 
-    // Obtain the completed tasks
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Obtain the completed tasks
     const completedTasks = useMemo(() => 
         state.tasks.filter(task => task.isCompleted),
         [state]
     );
 
 
-    // Define the state to edit a task
+    //-----------------------------------------------------------------------------------------------------------------
+    //                                                      // Define the state to edit a task
     const funEditTask = (taskId : string) => {
         const taskInfo = state.tasks.find(task => task.taskId === taskId);
         dispatch({
@@ -39,10 +54,12 @@ const TaskList = () => {
         })
     }
 
-    // List of pending tasks
+    //=================================================================================================================
+    //======================================================// Component template
     return (
         <Box id='tasks-list'>
             <div className='tasks-list__top'>
+                {/* Tasks lists tabs */}
                 <Stack direction="row" spacing={2}>
                     <Button 
                         className={'top-tabs__btn' + `${selectedTab == 'pending' ? " active" : ""}`} 
@@ -65,6 +82,7 @@ const TaskList = () => {
             <Stack spacing={2} className='tasks-list__items'>
                 {
                     selectedTab == 'pending' ? (
+                        // List of pending tasks
                         pendingTasks.map(task => (
                             <Paper 
                                 elevation={3} 
@@ -77,7 +95,7 @@ const TaskList = () => {
                                         {task.taskTitle}
                                     </Typography>
                                     <Typography className='item-top__duration'>
-                                        {task.taskDuration} min.
+                                        {task.taskFinalDuration} min.
                                     </Typography>
                                 </div>
                                 {/* Task information */}
@@ -114,6 +132,7 @@ const TaskList = () => {
                         ))
                     ) 
                     : (
+                        // List of completed tasks
                         completedTasks.map(task => (
                             <Paper 
                                 elevation={3} 

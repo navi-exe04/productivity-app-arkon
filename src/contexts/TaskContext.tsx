@@ -1,63 +1,55 @@
-// Import modules
+//=====================================================================================================================
+//==========================================================// Task context
+//==========================================================// Code by: Raúl Langle
+
+//=====================================================================================================================
+//==========================================================// Import modules
 import React, { createContext, useReducer, useContext } from 'react';
 import { Task } from '../models/interfaces';
 
-// Define a state for tasks
+//=====================================================================================================================
+//==========================================================// Task state model
 type TaskState = {
     tasks: Task[],
     isEditing: boolean,
     taskInfo: Task,
+    selectedTask: Task | undefined,
     resetForm: boolean,
 };
 
-// Define the type of actions for state
+//=====================================================================================================================
+//==========================================================// Actions
 type Action =
     | { type: 'ADD_TASK'; payload: Task }
     | { type: 'DELETE_TASK'; payload: string }
+    | { type: 'EDIT_TASK'; payload: Task }
     | { type: 'COMPLETE_TASK'; payload: string }
     | { type: 'UNCOMPLETE_TASK'; payload: string }
     | { type: 'SET_TASK_INFO'; payload: Task }
+    | { type: 'SET_SELECTED_TASK'; payload: string }
     | { type: 'SET_EDITING_TASK'; payload: boolean }
-    | { type: 'EDIT_TASK'; payload: Task }
     | { type: 'SET_RESET_FORM'; payload: boolean };
 
-// Config the actions
+//=====================================================================================================================
+//==========================================================// Reducer
 const taskReducer = (state: TaskState, action: Action): TaskState => {
     switch (action.type) {
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Create a task
         case 'ADD_TASK':
             return {
                 ...state,
                 tasks: [...state.tasks, action.payload]
             };
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Delete a task
         case 'DELETE_TASK':
             return {
                 ...state,
                 tasks: state.tasks.filter(task => task.taskId !== action.payload)
             };
-        case 'COMPLETE_TASK':
-            return {
-                ...state,
-                tasks: state.tasks.map(task =>
-                    task.taskId === action.payload ? { ...task, isCompleted: true, taskFinalDuration: task.taskDuration } : task
-                )
-            };
-        case 'UNCOMPLETE_TASK':
-            return {
-                ...state,
-                tasks: state.tasks.map(task =>
-                    task.taskId === action.payload ? { ...task, isCompleted: false } : task
-                )
-            };
-        case 'SET_TASK_INFO':
-            return {
-                ...state,
-                taskInfo: action.payload
-            }
-        case 'SET_EDITING_TASK':
-            return {
-                ...state,
-                isEditing: action.payload
-            };
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Edit a task
         case 'EDIT_TASK': {
             return {
                 ...state,
@@ -70,45 +62,86 @@ const taskReducer = (state: TaskState, action: Action): TaskState => {
                 taskInfo: {} as Task
             };
         }
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Define a task as complete
+        case 'COMPLETE_TASK':
+            return {
+                ...state,
+                tasks: state.tasks.map(task =>
+                    task.taskId === action.payload ? { ...task, isCompleted: true, taskFinalDuration: task.taskDuration } : task
+                )
+            };
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Define a task as uncomplete
+        case 'UNCOMPLETE_TASK':
+            return {
+                ...state,
+                tasks: state.tasks.map(task =>
+                    task.taskId === action.payload ? { ...task, isCompleted: false } : task
+                )
+            };
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Define a task info
+        case 'SET_TASK_INFO':
+            return {
+                ...state,
+                taskInfo: action.payload
+            }
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Define a selected task
+        case 'SET_SELECTED_TASK':
+            return {
+                ...state,
+                selectedTask: state.tasks.find(task =>
+                    task.taskId === action.payload
+                ),
+            };
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Set a editing task status
+        case 'SET_EDITING_TASK':
+            return {
+                ...state,
+                isEditing: action.payload
+            };
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Reset the form component
         case 'SET_RESET_FORM':
             return {
                 ...state,
                 resetForm: action.payload
             };
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Default
         default:
             return state;
     }
 };
 
-// Config the task context
-const TaskContext = createContext<{ state: TaskState; dispatch: React.Dispatch<Action> } | undefined>(undefined);
-// const TaskContext = createContext<{
-//     state: TaskState;
-//     dispatch: React.Dispatch<Action>;
-// }>({ 
-//     state: {
-//         tasks: [], 
-//         isEditing: false, 
-//         taskInfo: {
-//             taskId: "",
-//             taskTitle: "",
-//             taskDescription: "",
-//             taskDuration: 0,
-//             taskFinalDuration: 0,
-//             isCompleted: false,
-//             isCustomDuration: false,
-//         }
-//     }, 
-//     dispatch: () => null 
-// });
+//=====================================================================================================================
+//==========================================================// Task context
+const TaskContext = createContext<{
+    state: TaskState;
+    dispatch: React.Dispatch<Action>;
+}>({ 
+    state: {
+        tasks: [], 
+        isEditing: false, 
+        taskInfo:{} as Task,
+        selectedTask: {} as Task,
+        resetForm: false,
+    }, 
+    dispatch: () => null 
+});
 
-// Create the task provider component
+//=====================================================================================================================
+//==========================================================// Task provider
 export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [state, dispatch] = useReducer(taskReducer, {
-            tasks: [], 
-            isEditing: false, 
-            taskInfo: {} as Task,
-            resetForm: false,
+        tasks: [], 
+        isEditing: false, 
+        taskInfo:{} as Task,
+        selectedTask: {} as Task,
+        resetForm: false,
     });
 
     return (
@@ -118,6 +151,8 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
     );
 };
 
+//=====================================================================================================================
+//==========================================================// Custom task context
 export const useTaskContext = () => {
     const context = useContext(TaskContext);
     if (!context) {
