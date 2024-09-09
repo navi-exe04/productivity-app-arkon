@@ -48,6 +48,14 @@ body {
     font-weight: bolder !important;
 }
 
+.fst-italic {
+    font-style: italic;
+}
+
+.tt-uppercase {
+    text-transform: uppercase;
+}
+
 
 // App styles
 #productivity-app {
@@ -75,7 +83,7 @@ body {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    height: 150px;
+                    height: fit-content;
                     margin-bottom: 12px;
 
                     &:has(.timer-container__context) {
@@ -83,10 +91,35 @@ body {
                         justify-content: center;
                     }
                     
+                    .timer-container__info {
+                        h5, h6 {
+                            margin-bottom: 8px !important;
+                        }
+                        h6 {
+                            font-size: 18px;
+                        }
+                    }
+
                     .timer-container__context {
                         text-align: center;
                         font-weight: bolder;
                         font-size: 24px;
+                    }
+
+                    .timer-container__options {
+                        button {
+                            border-radius: 0;
+                            
+                            &:first-child {
+                                border-bottom-left-radius: 8px;
+                                border-top-left-radius: 8px;
+                            }
+    
+                            &:last-child {
+                                border-bottom-right-radius: 8px;
+                                border-top-right-radius: 8px;
+                            }
+                        }
                     }
                 }
             }
@@ -134,10 +167,6 @@ body {
                         background: $white;
                         border-radius: 10px;
                         border: 3px solid $blue-2;
-
-                        &.selected, &:hover {
-                            border-color: $orange;
-                        }
     
                         .item-top {
                             display: flex;
@@ -189,11 +218,19 @@ body {
                             .item-top {
                                 background: $orange;
                             }
+
+                            &.selected, &:hover {
+                                border-color: $orange;
+                            }
                         }
     
                         &.completed {
                             .item-top {
                                 background: $green;
+                            }
+
+                            &.selected, &:hover {
+                                border-color: $green;
                             }
                         }
                     }

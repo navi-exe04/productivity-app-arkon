@@ -38,18 +38,18 @@ const TaskList = () => {
     //-----------------------------------------------------------------------------------------------------------------
     //                                                      // Select a task from list
     const funSelectTask = (taskId: string) => {
-        // Get the task from list
+        //                                                  // Get the task from list
         const selectedTask = state.tasks.find(task => task.taskId === taskId);
-        // Remove the task from list
+        //                                                  // Remove the task from list
         const updatedTasks = state.tasks.filter(task => task.taskId !== taskId);
-        // Reorder the tasks list
+        //                                                  // Reorder the tasks list
         const reorderedTasks = [selectedTask, ...updatedTasks];
-        // Updates the tasks list in state
+        //                                                  // Updates the tasks list in state
         dispatch({
             type: 'SET_TASK_LIST',
             payload: reorderedTasks as Task[]
         });
-        // Set the selected task in state
+        //                                                  // Set the selected task in state
         dispatch({
             type: 'SET_SELECTED_TASK',
             payload: taskId
@@ -59,6 +59,7 @@ const TaskList = () => {
     //-----------------------------------------------------------------------------------------------------------------
     //                                                      // Define the state to edit a task
     const funEditTask = (taskId : string) => {
+        //                                                  // Obtain the task information to edit
         const taskInfo = state.tasks.find(task => task.taskId === taskId);
         dispatch({
             type: 'SET_TASK_INFO',
@@ -78,6 +79,7 @@ const TaskList = () => {
     //                                                      // Delete a task in state
     const funDeleteTask = (taskId : string) => {
         dispatch({ type: 'DELETE_TASK', payload: taskId });
+        //                                                  // Clean the timer if the selected task was deleted
         if (state.selectedTask?.taskId === taskId) {
             dispatch({
                 type: 'SET_SELECTED_TASK',
@@ -131,7 +133,9 @@ const TaskList = () => {
                                         {task.taskTitle}
                                     </Typography>
                                     <Typography className='item-top__duration'>
-                                        {task.taskFinalDuration} min.
+                                        Duración {Math.floor(task.taskFinalDuration / 3600)}h:
+                                        {Math.floor((task.taskFinalDuration % 3600) / 60)}m:
+                                        {task.taskFinalDuration % 60}s
                                     </Typography>
                                 </div>
                                 {/* Task information */}
@@ -181,7 +185,9 @@ const TaskList = () => {
                                         {task.taskTitle}
                                     </Typography>
                                     <Typography className='item-top__duration'>
-                                        {task.taskFinalDuration} min.
+                                        {Math.floor(task.taskCompletedDuration / 3600)}h:
+                                        {Math.floor((task.taskCompletedDuration % 3600) / 60)}m:
+                                        {task.taskCompletedDuration % 60}s
                                     </Typography>
                                 </div>
                                 {/* Task information */}

@@ -12,6 +12,7 @@ export interface Task {
     taskMinutes: number,
     taskHours: number,
     taskFinalDuration: number;
+    taskCompletedDuration: number;
     isCompleted: boolean;
     isCustomDuration: boolean;
 }

@@ -79,6 +79,7 @@ const TaskForm = () => {
                 taskMinutes: 0,
                 taskHours: 0,
                 taskFinalDuration: 0,
+                taskCompletedDuration: 0,
                 isCompleted: false,
                 isCustomDuration: false,
             }
@@ -116,6 +117,7 @@ const TaskForm = () => {
                 taskHours: showCustomizedDurationInput ? customHours : 0,
                 taskMinutes: showCustomizedDurationInput ? customMinutes : 0,
                 taskFinalDuration: showCustomizedDurationInput ? customDuration : taskDuration,
+                taskCompletedDuration: 0,
                 isCompleted: false,
                 isCustomDuration: showCustomizedDurationInput,
             },
@@ -135,6 +137,7 @@ const TaskForm = () => {
                 taskHours: showCustomizedDurationInput ? customHours : 0,
                 taskMinutes: showCustomizedDurationInput ? customMinutes : 0,
                 taskFinalDuration: showCustomizedDurationInput ? customDuration : taskDuration,
+                taskCompletedDuration: 0,
                 isCompleted: false,
                 isCustomDuration: showCustomizedDurationInput,
             },
@@ -151,7 +154,7 @@ const TaskForm = () => {
     //                                                      // Define the duration type in state
     const funSetTaskDuration = (duration : number) => {
         setTaskDuration(duration);
-        
+        //                                                  // Is a custom duration
         if (duration == 1) 
             return setShowCustomizedDurationInput(true);
 
@@ -160,7 +163,7 @@ const TaskForm = () => {
 
     //-----------------------------------------------------------------------------------------------------------------
     //                                                      // Set a custom duration in state
-    const funSetCustomizedDurantion = (e : React.ChangeEvent<HTMLInputElement>) => {
+    const funSetCustomizedDuration = (e : React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         //                                                  // Obtain the values of inputs and define temp variables
         const {id, value} = e.target;
@@ -176,11 +179,11 @@ const TaskForm = () => {
             setCustomMinutes(duration);
             newCustomMinutes = duration;
         }
-        //                                                  // Save the total duration in minutes in state
-        const totalDuration = (newCustomHours*60) + newCustomMinutes;
+        //                                                  // Save the total duration in seconds in state
+        const totalDuration = (newCustomHours*3600) + (newCustomMinutes*60);
         setCustomDuration(totalDuration);
         //                                                  // Verify if the duration is correct
-        if (totalDuration > 120)
+        if (totalDuration > 7200)
             return setShowErrorMessage(true);
         else
             return setShowErrorMessage(false);
@@ -261,7 +264,7 @@ const TaskForm = () => {
                                             variant="outlined"
                                             helperText={showErrorMessage ? 'La duración no puede ser más de 2 hrs.' : ""}
                                             sx={{marginBottom:"12px"}}
-                                            onChange={funSetCustomizedDurantion}
+                                            onChange={funSetCustomizedDuration}
                                             inputProps={{
                                                 min: 0, 
                                                 max: 2,
@@ -273,7 +276,7 @@ const TaskForm = () => {
                                             type='number'
                                             label="Minutos" 
                                             variant="outlined"
-                                            onChange={funSetCustomizedDurantion}
+                                            onChange={funSetCustomizedDuration}
                                             inputProps={{
                                                 min: 0, 
                                                 max: 59,

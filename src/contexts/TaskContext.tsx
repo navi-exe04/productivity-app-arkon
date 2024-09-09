@@ -24,7 +24,7 @@ type Action =
     | { type: 'ADD_TASK'; payload: Task }
     | { type: 'DELETE_TASK'; payload: string }
     | { type: 'EDIT_TASK'; payload: Task }
-    | { type: 'COMPLETE_TASK'; payload: string }
+    | { type: 'COMPLETE_TASK'; payload: {taskId: string, taskCompletedDuration: number} }
     | { type: 'UNCOMPLETE_TASK'; payload: string }
     | { type: 'SET_TASK_INFO'; payload: Task }
     | { type: 'SET_SELECTED_TASK'; payload: string | null}
@@ -76,7 +76,11 @@ const taskReducer = (state: TaskState, action: Action): TaskState => {
             return {
                 ...state,
                 tasks: state.tasks.map(task =>
-                    task.taskId === action.payload ? { ...task, isCompleted: true, taskFinalDuration: task.taskDuration } : task
+                    task.taskId === action.payload.taskId ? { 
+                        ...task, 
+                        isCompleted: true, 
+                        taskCompletedDuration: action.payload.taskCompletedDuration 
+                    } : task
                 )
             };
         //-------------------------------------------------------------------------------------------------------------
@@ -85,7 +89,7 @@ const taskReducer = (state: TaskState, action: Action): TaskState => {
             return {
                 ...state,
                 tasks: state.tasks.map(task =>
-                    task.taskId === action.payload ? { ...task, isCompleted: false } : task
+                    task.taskId === action.payload ? { ...task, isCompleted: false, taskCompletedDuration: 0 } : task
                 )
             };
         //-------------------------------------------------------------------------------------------------------------
