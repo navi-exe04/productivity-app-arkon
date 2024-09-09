@@ -125,11 +125,15 @@ body {
                 }
     
                 .tasks-list__items {
+                    padding: 0 12px 0 0;
+                    max-height: 550px;
+                    overflow-y: scroll;
+
                     .list-items__item {
                         transition: all ease-in-out 0.3s;
                         background: $white;
                         border-radius: 10px;
-                        border: 3px solid $blue-1;
+                        border: 3px solid $blue-2;
 
                         &.selected, &:hover {
                             border-color: $orange;
@@ -138,8 +142,8 @@ body {
                         .item-top {
                             display: flex;
                             justify-content: space-between;
-                            border-top-left-radius: 10px;
-                            border-top-right-radius: 10px;
+                            border-top-left-radius: 8px;
+                            border-top-right-radius: 8px;
                             padding: 8px 12px;
                             margin-bottom: 16px;
                             
@@ -171,11 +175,11 @@ body {
                                 border-radius: 0;
                                 
                                 &:first-child {
-                                    border-top-left-radius: 10px;
+                                    border-top-left-radius: 8px;
                                 }
         
                                 &:last-child {
-                                    border-bottom-right-radius: 10px;
+                                    border-bottom-right-radius: 8px;
                                 }
                             }
     

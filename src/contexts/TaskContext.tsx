@@ -20,6 +20,7 @@ type TaskState = {
 //=====================================================================================================================
 //==========================================================// Actions
 type Action =
+    | { type: 'SET_TASK_LIST'; payload: Task[] }
     | { type: 'ADD_TASK'; payload: Task }
     | { type: 'DELETE_TASK'; payload: string }
     | { type: 'EDIT_TASK'; payload: Task }
@@ -34,6 +35,13 @@ type Action =
 //==========================================================// Reducer
 const taskReducer = (state: TaskState, action: Action): TaskState => {
     switch (action.type) {
+        //-------------------------------------------------------------------------------------------------------------
+        //                                                  // Set the tasks list
+        case 'SET_TASK_LIST':
+            return {
+                ...state,
+                tasks: action.payload
+            };
         //-------------------------------------------------------------------------------------------------------------
         //                                                  // Create a task
         case 'ADD_TASK':
