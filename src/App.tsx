@@ -5,7 +5,7 @@
 //=====================================================================================================================
 //==========================================================// Import modules
 import { TaskProvider } from "./contexts/TaskContext";
-import { Grid2, Typography, Box } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import Timer from "./components/Timer";
