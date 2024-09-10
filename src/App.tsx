@@ -4,15 +4,20 @@
 
 //=====================================================================================================================
 //==========================================================// Import modules
+import { useState } from "react";
 import { TaskProvider } from "./contexts/TaskContext";
-import { Typography, Box } from "@mui/material";
+import { Typography, Box, Stack, Button } from "@mui/material";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import Timer from "./components/Timer";
+import TaskChart from "./components/TaskChart";
+import TabsComponent from "./components/subcomponents/TabsComponent";
 
 //=====================================================================================================================
 //==========================================================// App
 function App() {
+
+  const [appSection, setAppSection] = useState('timer')
 
   //===================================================================================================================
   //========================================================// App template
@@ -28,8 +33,25 @@ function App() {
           <Box className="productivity-app__content">
             <div className="content-section">
               <div className="content-section__column">
-                <Timer></Timer>
-                <TaskForm></TaskForm>
+                <TabsComponent 
+                  tabsState={appSection} 
+                  contentTabOne="Cronometro" 
+                  contentTabTwo="Historial de tareas"
+                  stateTabOne="timer"
+                  stateTabTwo="chart"
+                  funChangeState={setAppSection}
+                />
+                {
+                  appSection == 'timer' ? (
+                    <>
+                      <Timer></Timer>
+                      <TaskForm></TaskForm>
+                    </>
+                  )
+                  : (
+                    <TaskChart></TaskChart>
+                  )
+                }
               </div>
               <div className="content-section__column">
                 <TaskList></TaskList>

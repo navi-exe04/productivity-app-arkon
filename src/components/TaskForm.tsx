@@ -73,6 +73,7 @@ const TaskForm = () => {
             type: 'SET_TASK_INFO',
             payload: {
                 taskId: "",
+                taskDate: new Date(),
                 taskTitle: "",
                 taskDescription: "",
                 taskDuration: 0,
@@ -111,6 +112,7 @@ const TaskForm = () => {
             type: 'ADD_TASK',
             payload: {
                 taskId: Date.now().toString(),
+                taskDate: new Date(Date.now()),
                 taskTitle,
                 taskDescription,
                 taskDuration,
@@ -131,6 +133,7 @@ const TaskForm = () => {
             type: 'EDIT_TASK',
             payload: {
                 taskId: state.taskInfo.taskId,
+                taskDate: state.taskInfo.taskDate,
                 taskTitle,
                 taskDescription,
                 taskDuration,
@@ -198,12 +201,12 @@ const TaskForm = () => {
                     {
                         // Form text title
                         !state.isEditing ? (
-                            <Typography variant="h4" className='title fc-blue-1'>
+                            <Typography variant="h5" className='title fc-blue-1'>
                                 Crear una nueva tarea
                             </Typography>
                         ) 
                         : (
-                            <Typography variant="h4" className='title fc-blue-1'>
+                            <Typography variant="h5" className='title fc-blue-1'>
                                 Editar tarea
                             </Typography>
                         )
@@ -245,9 +248,9 @@ const TaskForm = () => {
                                 required
                             >
                                 <MenuItem value={0} disabled defaultChecked>Elegir duración</MenuItem>
-                                <MenuItem value={30}>Corta (30 minutos)</MenuItem>
-                                <MenuItem value={45}>Media (45 minutos)</MenuItem>
-                                <MenuItem value={60}>Larga (1 hora)</MenuItem>
+                                <MenuItem value={1800}>Corta (30 minutos)</MenuItem>
+                                <MenuItem value={2700}>Media (45 minutos)</MenuItem>
+                                <MenuItem value={3600}>Larga (1 hora)</MenuItem>
                                 <MenuItem value={1}>Personalizada</MenuItem>
                             </Select>
                             {

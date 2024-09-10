@@ -69,6 +69,27 @@ body {
         margin: 32px 0px;
     }
 
+    .tabs-component {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 12px;
+
+        button.tabs-component__btn {
+            color: $gray-2;
+            font-weight: bolder;
+            background: none;
+            border-bottom: 3px solid transparent;
+            border-radius: 0;
+            box-shadow: none;
+            
+            &:hover, &.active {
+                color: $white;
+                border-bottom: 3px solid $white;
+            }
+        }
+    }
+
     .productivity-app__content {
         .content-section {
             display: flex;
@@ -140,27 +161,6 @@ body {
             #tasks-list {
                 width: 100%;
                 max-width: 500px;
-        
-                .tasks-list__top {
-                    width: 100%;
-                    display: flex;
-                    justify-content: space-around;
-                    margin-bottom: 12px;
-    
-                    button.top-tabs__btn {
-                        color: $gray-2;
-                        font-weight: bolder;
-                        background: none;
-                        border-bottom: 3px solid transparent;
-                        border-radius: 0;
-                        box-shadow: none;
-                        
-                        &:hover, &.active {
-                            color: $white;
-                            border-bottom: 3px solid $white;
-                        }
-                    }
-                }
     
                 .tasks-list__items {
                     padding: 0 12px 0 0;

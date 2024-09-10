@@ -6,6 +6,7 @@
 //                                                          // Task model
 export interface Task {
     taskId: string;
+    taskDate: Date;
     taskTitle: string;
     taskDescription: string;
     taskDuration: number;
