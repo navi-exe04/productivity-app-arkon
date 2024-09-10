@@ -6,7 +6,7 @@
 //==========================================================// Import modules
 import { useState } from "react";
 import { TaskProvider } from "./contexts/TaskContext";
-import { Typography, Box, Stack, Button } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 import Timer from "./components/Timer";
